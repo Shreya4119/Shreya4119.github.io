@@ -366,6 +366,10 @@ form.card{background:var(--card);border:1px solid var(--line);border-radius:var(
 .field .e{font-size:11px;color:#f87171;display:none}
 .field.err .e{display:block}
 form .btn{grid-column:1/-1;justify-content:center;padding:15px}
+.form-err{grid-column:1/-1;display:none;font-size:13px;color:#f87171;background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.25);border-radius:10px;padding:10px 12px}
+.form-err.show{display:block}
+.form-err a{text-decoration:underline}
+.btn[disabled]{opacity:.65;cursor:wait;transform:none}
 .form-ok{grid-column:1/-1;display:none;text-align:center;padding:40px 10px}
 .form-ok b{display:block;font-size:22px;margin:10px 0 6px;letter-spacing:-.02em}
 .form-ok p{color:var(--muted);font-size:14px}
@@ -485,7 +489,6 @@ footer{border-top:1px solid var(--line);padding:26px 0;background:var(--bg-2)}
         <p class="lead">I build cloud-native Java &amp; Spring Boot systems, e-commerce stores and AI features that help businesses grow. Open to remote work, worldwide.</p>
         <div class="hero-ctas">
           <a href="#projects" class="btn btn-primary" style="padding:14px 22px;font-size:15px">View my work <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-          <a href="#contact" class="link-arrow">Let's talk <span>↗</span></a>
         </div>
       </div>
     </article>
@@ -683,13 +686,15 @@ footer{border-top:1px solid var(--line);padding:26px 0;background:var(--bg-2)}
     </div>
 
     <form class="card reveal" id="contactForm" novalidate>
-      <div class="field"><label for="fName">Your name</label><input id="fName" placeholder="Jane Smith" required><span class="e">Please enter your name</span></div>
-      <div class="field"><label for="fEmail">Email address</label><input id="fEmail" type="email" placeholder="jane@company.com" required><span class="e">Please enter a valid email</span></div>
-      <div class="field"><label for="fType">Project type</label><select id="fType"><option>Backend / API development</option><option>Web application</option><option>E-commerce store</option><option>AI / RAG solution</option><option>AWS cloud &amp; migration</option></select></div>
-      <div class="field"><label for="fBudget">Budget range</label><select id="fBudget"><option>Under €2k</option><option>€2k — €5k</option><option>€5k — €10k</option><option>€10k+</option><option>Hourly / ongoing</option></select></div>
-      <div class="field full"><label for="fMsg">Tell me about your project</label><textarea id="fMsg" placeholder="What are you hoping to build?" required></textarea><span class="e">A sentence or two helps me prepare</span></div>
-      <button class="btn btn-primary" type="submit">Send inquiry <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button>
-      <div class="form-ok" id="formOk"><div class="chk"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m5 12 5 5 9-10"/></svg></div><b>Inquiry ready!</b><p>Connect this form to Formspree or EmailJS to receive messages. Until then, email <span class="mono">s.joshi41199@gmail.com</span>.</p></div>
+      <div class="field"><label for="fName">Your name</label><input id="fName" name="name" autocomplete="name" placeholder="Jane Smith" required><span class="e">Please enter your name</span></div>
+      <div class="field"><label for="fEmail">Email address</label><input id="fEmail" name="email" type="email" autocomplete="email" placeholder="jane@company.com" required><span class="e">Please enter a valid email</span></div>
+      <div class="field"><label for="fType">Project type</label><select id="fType" name="project_type"><option>Backend / API development</option><option>Web application</option><option>E-commerce store</option><option>AI / RAG solution</option><option>AWS cloud &amp; migration</option></select></div>
+      <div class="field"><label for="fBudget">Budget range</label><select id="fBudget" name="budget"><option>Under €2k</option><option>€2k — €5k</option><option>€5k — €10k</option><option>€10k+</option><option>Hourly / ongoing</option></select></div>
+      <div class="field full"><label for="fMsg">Tell me about your project</label><textarea id="fMsg" name="message" placeholder="What are you hoping to build?" required></textarea><span class="e">A sentence or two helps me prepare</span></div>
+      <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;height:0;width:0">
+      <p class="form-err" id="formErr" role="alert"></p>
+      <button class="btn btn-primary" type="submit" id="sendBtn">Send inquiry <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button>
+      <div class="form-ok" id="formOk"><div class="chk"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m5 12 5 5 9-10"/></svg></div><b>Thanks — message sent!</b><p>I'll get back to you within two business days.</p></div>
     </form>
   </div>
 </section>
@@ -867,11 +872,28 @@ $$('#filters button').forEach(b=>b.onclick=()=>{$$('#filters button').forEach(x=
   $$('.proj').forEach(p=>{const show=f==='all'||p.dataset.cat===f;p.classList.toggle('hide',!show);if(show){p.classList.add('in')}})});
 
 // contact form validation
-$('#contactForm').onsubmit=e=>{e.preventDefault();let ok=true;
+/* Sends the form through FormSubmit (free, no backend needed).
+   The very first message triggers an activation email to CONTACT_EMAIL — click "Activate Form" once. */
+const CONTACT_EMAIL='s.joshi41199@gmail.com';
+$('#contactForm').onsubmit=async e=>{e.preventDefault();let ok=true;
   [['#fName',v=>v.trim().length>1],['#fEmail',v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)],['#fMsg',v=>v.trim().length>5]].forEach(([s,fn])=>{const f=$(s).closest('.field');const good=fn($(s).value);f.classList.toggle('err',!good);if(!good)ok=false});
   if(!ok)return;
-  $$('#contactForm > .field, #contactForm > .btn').forEach(el=>el.style.display='none');$('#formOk').style.display='block';
-  /* To receive real messages: fetch('https://formspree.io/f/YOUR_ID',{method:'POST',body:new FormData(e.target),headers:{Accept:'application/json'}}) */
+  const form=e.target,btn=$('#sendBtn'),err=$('#formErr');
+  if(form._honey.value)return; // spam bot
+  const data=Object.fromEntries(new FormData(form));
+  delete data._honey;
+  Object.assign(data,{_subject:`Portfolio inquiry: ${data.project_type} — ${data.name}`,_replyto:data.email,_template:'table',_captcha:'false'});
+  err.classList.remove('show');btn.disabled=true;btn.firstChild.textContent='Sending… ';
+  try{
+    const r=await fetch(`https://formsubmit.co/ajax/${CONTACT_EMAIL}`,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(data)});
+    const res=await r.json().catch(()=>({}));
+    if(!r.ok||res.success==='false'||res.success===false)throw new Error(res.message||r.status);
+    $$('#contactForm > .field, #contactForm > .btn').forEach(el=>el.style.display='none');$('#formOk').style.display='block';
+  }catch(x){
+    const body=encodeURIComponent(`${data.message}\n\n— ${data.name} (${data.email})\nProject: ${data.project_type} · Budget: ${data.budget}`);
+    err.innerHTML=`Sorry, the message couldn't be sent right now. Please email me directly at <a href="mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('Portfolio inquiry')}&body=${body}">${CONTACT_EMAIL}</a>.`;
+    err.classList.add('show');
+  }finally{btn.disabled=false;btn.firstChild.textContent='Send inquiry ';}
 };
 $$('#contactForm input, #contactForm textarea').forEach(i=>i.oninput=()=>i.closest('.field').classList.remove('err'));
 
