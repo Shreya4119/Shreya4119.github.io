@@ -681,14 +681,200 @@
       display: grid;
       place-items: center;
       position: relative;
-      margin: 8px -20px 0
+      margin: 8px -20px 0;
+      min-height: 230px
     }
 
-    .globe svg {
+    .globe-float {
       width: 100%;
       max-width: 300px;
+      animation: float 8s ease-in-out infinite;
+      perspective: 700px
+    }
+
+    .globe-svg {
+      width: 100%;
       height: auto;
-      animation: float 8s ease-in-out infinite
+      display: block;
+      transform: rotateX(var(--tx, 0deg)) rotateY(var(--ty, 0deg));
+      transition: transform .9s var(--ease), opacity .45s ease
+    }
+
+    .globe.zoomed .globe-svg {
+      transform: scale(3.4);
+      opacity: 0;
+      pointer-events: none
+    }
+
+    .mk {
+      cursor: pointer;
+      outline: none
+    }
+
+    .mk .core {
+      transition: r .25s var(--ease)
+    }
+
+    .mk:hover .core,
+    .mk:focus-visible .core {
+      r: 5.5
+    }
+
+    .mk .ring-f {
+      fill: none;
+      stroke: var(--cyan);
+      stroke-width: 1.2;
+      opacity: 0;
+      transition: opacity .2s
+    }
+
+    .mk:focus-visible .ring-f {
+      opacity: 1
+    }
+
+    .mk .lbl {
+      font: 600 9.5px var(--sans);
+      fill: var(--text);
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity .25s, transform .25s var(--ease);
+      pointer-events: none;
+      paint-order: stroke;
+      stroke: var(--card);
+      stroke-width: 3px
+    }
+
+    .mk:hover .lbl,
+    .mk:focus-visible .lbl {
+      opacity: 1;
+      transform: none
+    }
+
+    .globe-hint {
+      position: absolute;
+      top: -6px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--faint);
+      transition: opacity .3s
+    }
+
+    .globe.zoomed .globe-hint {
+      opacity: 0
+    }
+
+    .country {
+      position: absolute;
+      inset: -6px 20px 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: scale(.75);
+      pointer-events: none;
+      transition: opacity .5s ease .25s, transform .7s var(--ease) .2s
+    }
+
+    .globe.zoomed .country {
+      opacity: 1;
+      transform: none;
+      pointer-events: auto
+    }
+
+    .country svg {
+      width: 100%;
+      max-width: 230px;
+      height: auto;
+      overflow: visible
+    }
+
+    .c-shape {
+      fill: rgba(var(--cyan-rgb), .1);
+      stroke: var(--cyan);
+      stroke-width: 1.1;
+      stroke-linejoin: round;
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+      fill-opacity: 0;
+      transition: stroke-dashoffset 1.4s var(--ease) .35s, fill-opacity .8s ease 1.1s
+    }
+
+    .globe.zoomed .c-shape {
+      stroke-dashoffset: 0;
+      fill-opacity: 1
+    }
+
+    .c-pin {
+      fill: var(--cyan)
+    }
+
+    .c-pulse {
+      fill: none;
+      stroke: var(--cyan);
+      stroke-width: 1.5;
+      animation: cpulse 2s ease-out infinite;
+      transform-box: fill-box;
+      transform-origin: center
+    }
+
+    @keyframes cpulse {
+      0% {
+        transform: scale(.4);
+        opacity: .9
+      }
+
+      100% {
+        transform: scale(2.6);
+        opacity: 0
+      }
+    }
+
+    .c-city {
+      font: 600 11px var(--sans);
+      fill: var(--text);
+      paint-order: stroke;
+      stroke: var(--card);
+      stroke-width: 3.5px
+    }
+
+    .c-info {
+      text-align: center;
+      margin-top: 6px
+    }
+
+    .c-info b {
+      display: block;
+      font-size: 14px;
+      font-weight: 600
+    }
+
+    .c-info span {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted)
+    }
+
+    .c-back {
+      margin-top: 10px;
+      background: var(--card-2);
+      border: 1px solid var(--line);
+      color: var(--text-2);
+      border-radius: 99px;
+      padding: 6px 12px;
+      font-size: 11.5px;
+      cursor: pointer;
+      transition: border-color .2s, color .2s
+    }
+
+    .c-back:hover {
+      color: var(--text);
+      border-color: var(--accent)
     }
 
     @keyframes float {
@@ -1633,6 +1819,38 @@
       display: none
     }
 
+    .proj-group {
+      margin-top: 64px
+    }
+
+    .proj-group.hide {
+      display: none
+    }
+
+    .sub-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+      border-top: 1px solid var(--line);
+      padding-top: 22px;
+      margin-bottom: 22px
+    }
+
+    .sub-title {
+      font-size: clamp(26px, 3vw, 38px);
+      font-weight: 600;
+      letter-spacing: -.035em;
+      line-height: 1.1
+    }
+
+    .sub-head p {
+      color: var(--muted);
+      font-size: 14px;
+      max-width: 440px
+    }
+
     .proj-shot {
       height: 300px;
       margin: 8px 8px 0;
@@ -2090,6 +2308,247 @@
       padding: 0 10px
     }
 
+    /* cloud journey */
+    .cloud-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.25fr;
+      gap: 12px
+    }
+
+    .cloud-col {
+      display: flex;
+      flex-direction: column;
+      gap: 12px
+    }
+
+    .cloud-card h3 {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px
+    }
+
+    .cpath {
+      list-style: none;
+      position: relative
+    }
+
+    .cpath li {
+      position: relative;
+      padding: 0 0 22px 30px
+    }
+
+    .cpath li:last-child {
+      padding-bottom: 0
+    }
+
+    .cpath li::before {
+      content: "";
+      position: absolute;
+      left: 6px;
+      top: 18px;
+      bottom: -2px;
+      width: 1px;
+      background: var(--line-2)
+    }
+
+    .cpath li:last-child::before {
+      display: none
+    }
+
+    .cpath .pt {
+      position: absolute;
+      left: 0;
+      top: 3px;
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      border: 2px solid var(--line-2);
+      background: var(--bg)
+    }
+
+    .cpath li.done .pt {
+      border-color: var(--accent);
+      background: var(--accent)
+    }
+
+    .cpath li.progress .pt {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(var(--accent-rgb), .18)
+    }
+
+    .cpath b {
+      font-size: 15px;
+      font-weight: 500;
+      display: block;
+      letter-spacing: -.01em
+    }
+
+    .cpath p {
+      font-size: 12.5px;
+      color: var(--muted);
+      margin-top: 3px
+    }
+
+    .st {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      padding: 3px 7px;
+      border-radius: 6px;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      margin-top: 7px
+    }
+
+    .st.done {
+      color: #4ade80;
+      border-color: rgba(74, 222, 128, .3)
+    }
+
+    .st.progress {
+      color: var(--accent-2);
+      border-color: rgba(var(--accent-rgb), .35)
+    }
+
+    .cloud-links {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap
+    }
+
+    .cloud-links .btn {
+      padding: 10px 14px;
+      font-size: 13px
+    }
+
+    .badges {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 10px
+    }
+
+    .bdg {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px 12px;
+      text-align: center;
+      background: var(--bg-2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      transition: border-color .25s, transform .25s var(--ease)
+    }
+
+    a.bdg:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px)
+    }
+
+    .bdg .hex {
+      width: 58px;
+      height: 64px;
+      clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+      background: linear-gradient(145deg, var(--cyan), var(--accent));
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600
+    }
+
+    .bdg span {
+      font-size: 12px;
+      line-height: 1.35;
+      color: var(--text-2)
+    }
+
+    .bdg small {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--faint);
+      letter-spacing: .08em
+    }
+
+    .credly-embed {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-start
+    }
+
+    .labs {
+      display: flex;
+      flex-direction: column
+    }
+
+    .lab {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 6px 16px;
+      padding: 14px 0;
+      border-top: 1px solid var(--line)
+    }
+
+    .lab:first-child {
+      border-top: 0;
+      padding-top: 0
+    }
+
+    .lab b {
+      font-size: 14.5px;
+      font-weight: 500
+    }
+
+    .lab p {
+      grid-column: 1/-1;
+      font-size: 12.5px;
+      color: var(--muted)
+    }
+
+    .lab .tags {
+      grid-column: 1/-1
+    }
+
+    .lab .st {
+      margin: 0;
+      align-self: start
+    }
+
+    .visits {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      border-radius: 99px;
+      padding: 6px 12px;
+      margin-top: 14px
+    }
+
+    .visits b {
+      color: var(--text)
+    }
+
+    .visits[hidden] {
+      display: none
+    }
+
+    @media (max-width:860px) {
+      .cloud-grid {
+        grid-template-columns: 1fr
+      }
+    }
+
     /* contact */
     .contact-sec {
       margin-top: 130px;
@@ -2545,6 +3004,7 @@
       <a href="#about">About</a>
       <a href="#skills">Skills</a>
       <a href="#projects">Projects</a>
+      <a href="#cloud">Cloud</a>
       <a href="#services">Services</a>
       <a href="#contact">Contact</a>
     </div>
@@ -2592,7 +3052,7 @@
     </div>
   </nav>
   <div class="mobile-menu" id="mobileMenu">
-    <a href="#about">About</a><a href="#skills">Skills</a><a href="#projects">Projects</a><a
+    <a href="#about">About</a><a href="#skills">Skills</a><a href="#projects">Projects</a><a href="#cloud">Cloud</a><a
       href="#services">Services</a><a href="#contact">Contact</a>
     <a href="#contact" class="btn btn-primary" style="justify-content:center;margin-top:8px">Let's connect</a>
   </div>
@@ -2612,14 +3072,14 @@
             </svg>
             <b>&lt;/&gt;</b>
           </div>
-          <span class="pill"><span class="dot"></span>Open to remote work · Freelance</span>
+          <span class="pill"><span class="dot"></span>Open to hybrid &amp; remote work · Freelance</span>
         </div>
         <div>
           <span class="eyebrow muted" style="color:var(--muted)">Hello, I'm</span>
           <h1>Shreya <span class="grad">Joshi.</span></h1>
           <h2>Backend &amp; Full-Stack Engineer <span>+</span><br>AI-Powered Applications</h2>
           <p class="lead">I build cloud-native Java &amp; Spring Boot systems, e-commerce stores and AI features that
-            help businesses grow. Open to remote work, worldwide.</p>
+            help businesses grow. Open to hybrid work in the Netherlands and remote work worldwide.</p>
           <div class="hero-ctas">
             <a href="#projects" class="btn btn-primary" style="padding:14px 22px;font-size:15px">View my work <svg
                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
@@ -2638,52 +3098,70 @@
             stroke-width="1.8">
             <path d="M7 17 17 7M8 7h9v9" />
           </svg></div>
-        <div class="globe">
-          <svg viewBox="0 0 300 300" aria-hidden="true">
-            <defs>
-              <radialGradient id="gl" cx="38%" cy="32%" r="70%">
-                <stop offset="0" style="stop-color:color-mix(in srgb,var(--cyan) 22%,#0c1418)" />
-                <stop offset=".55" style="stop-color:color-mix(in srgb,var(--cyan) 10%,#0b1013)" />
-                <stop offset="1" stop-color="#080b0d" />
-              </radialGradient>
-              <radialGradient id="pt">
-                <stop offset="0" style="stop-color:var(--cyan)" />
-                <stop offset="1" style="stop-color:var(--cyan);stop-opacity:0" />
-              </radialGradient>
-              <clipPath id="gc">
-                <circle cx="150" cy="150" r="128" />
-              </clipPath>
-            </defs>
-            <circle cx="150" cy="150" r="128" fill="url(#gl)" style="stroke:rgba(var(--cyan-rgb),.25)" />
-            <g clip-path="url(#gc)" style="fill:rgba(var(--cyan-rgb),.12);stroke:rgba(var(--cyan-rgb),.22)">
-              <path d="M175 88c30-8 62 8 68 30s-12 40-40 38-48-14-50-34 4-28 22-34z" />
-              <path d="M120 150c26-10 54 2 60 24s-6 44-34 46-46-12-48-34 4-28 22-36z" />
-              <path d="M60 110c14-6 30 0 32 14s-10 22-24 20-20-10-20-20 4-10 12-14z" opacity=".7" />
-            </g>
-            <g clip-path="url(#gc)" fill="none" stroke="rgba(255,255,255,.05)">
-              <ellipse cx="150" cy="150" rx="128" ry="42" />
-              <ellipse cx="150" cy="150" rx="128" ry="88" />
-              <ellipse cx="150" cy="150" rx="42" ry="128" />
-              <ellipse cx="150" cy="150" rx="88" ry="128" />
-            </g>
-            <circle cx="129" cy="130" r="14" fill="url(#pt)" opacity=".5">
-              <animate attributeName="r" values="8;16;8" dur="2.4s" repeatCount="indefinite" />
-            </circle>
-            <circle cx="129" cy="130" r="3.5" style="fill:var(--cyan)" />
-            <circle cx="206" cy="132" r="3" style="fill:var(--cyan)" />
-            <circle cx="152" cy="196" r="3" style="fill:var(--cyan)" />
-            <path d="M129 130 Q170 95 206 132" fill="none" style="stroke:var(--cyan)" stroke-width="1"
-              stroke-dasharray="3 4" opacity=".6">
-              <animate attributeName="stroke-dashoffset" from="0" to="-28" dur="1.6s" repeatCount="indefinite" />
-            </path>
-            <path d="M129 130 Q120 175 152 196" fill="none" style="stroke:var(--accent)" stroke-width="1"
-              stroke-dasharray="3 4" opacity=".6">
-              <animate attributeName="stroke-dashoffset" from="0" to="-28" dur="1.9s" repeatCount="indefinite" />
-            </path>
-          </svg>
+        <div class="globe" id="globe">
+          <div class="globe-float">
+            <svg class="globe-svg" viewBox="0 0 300 300" role="group" aria-label="Globe: tap a location to zoom in">
+              <defs>
+                <radialGradient id="gl" cx="38%" cy="32%" r="70%">
+                  <stop offset="0" style="stop-color:color-mix(in srgb,var(--cyan) 22%,#0c1418)" />
+                  <stop offset=".55" style="stop-color:color-mix(in srgb,var(--cyan) 10%,#0b1013)" />
+                  <stop offset="1" stop-color="#080b0d" />
+                </radialGradient>
+                <radialGradient id="pt">
+                  <stop offset="0" style="stop-color:var(--cyan)" />
+                  <stop offset="1" style="stop-color:var(--cyan);stop-opacity:0" />
+                </radialGradient>
+                <clipPath id="gc">
+                  <circle cx="150" cy="150" r="128" />
+                </clipPath>
+              </defs>
+              <circle cx="150" cy="150" r="128" fill="url(#gl)" style="stroke:rgba(var(--cyan-rgb),.25)" />
+              <g clip-path="url(#gc)" style="fill:rgba(var(--cyan-rgb),.12);stroke:rgba(var(--cyan-rgb),.22)">
+                <path d="M175 88c30-8 62 8 68 30s-12 40-40 38-48-14-50-34 4-28 22-34z" />
+                <path d="M120 150c26-10 54 2 60 24s-6 44-34 46-46-12-48-34 4-28 22-36z" />
+                <path d="M60 110c14-6 30 0 32 14s-10 22-24 20-20-10-20-20 4-10 12-14z" opacity=".7" />
+              </g>
+              <g clip-path="url(#gc)" fill="none" stroke="rgba(255,255,255,.05)">
+                <ellipse cx="150" cy="150" rx="128" ry="42" />
+                <ellipse cx="150" cy="150" rx="128" ry="88" />
+                <ellipse cx="150" cy="150" rx="42" ry="128" />
+                <ellipse cx="150" cy="150" rx="88" ry="128" />
+              </g>
+              <path d="M129 128 Q175 112 200 170" fill="none" style="stroke:var(--cyan)" stroke-width="1"
+                stroke-dasharray="3 4" opacity=".6">
+                <animate attributeName="stroke-dashoffset" from="0" to="-28" dur="1.6s" repeatCount="indefinite" />
+              </path>
+              <g class="mk" data-country="nl" tabindex="0" role="button" aria-label="Zoom in to Almere, Netherlands">
+                <circle cx="129" cy="128" r="14" fill="url(#pt)" opacity=".5">
+                  <animate attributeName="r" values="8;16;8" dur="2.4s" repeatCount="indefinite" />
+                </circle>
+                <circle class="ring-f" cx="129" cy="128" r="9" />
+                <circle class="core" cx="129" cy="128" r="3.5" style="fill:var(--cyan)" />
+                <circle cx="129" cy="128" r="14" fill="transparent" />
+                <text class="lbl" x="129" y="112" text-anchor="middle">Almere, NL</text>
+              </g>
+              <g class="mk" data-country="in" tabindex="0" role="button" aria-label="Zoom in to Pune, India">
+                <circle class="ring-f" cx="200" cy="170" r="9" />
+                <circle class="core" cx="200" cy="170" r="3" style="fill:var(--accent-2)" />
+                <circle cx="200" cy="170" r="14" fill="transparent" />
+                <text class="lbl" x="200" y="192" text-anchor="middle">Pune, India</text>
+              </g>
+            </svg>
+          </div>
+          <span class="globe-hint">Tap a marker to zoom in</span>
+          <div class="country" id="country" aria-live="polite">
+            <svg viewBox="0 0 300 230" aria-hidden="true">
+              <path class="c-shape" id="cShape" pathLength="1" d="" />
+              <circle class="c-pulse" id="cPulse" cx="0" cy="0" r="6" />
+              <circle class="c-pin" id="cPin" cx="0" cy="0" r="4" />
+              <text class="c-city" id="cCity" x="0" y="0"></text>
+            </svg>
+            <div class="c-info"><b id="cName"></b><span id="cSub"></span></div>
+            <button class="c-back" id="cBack" type="button">← Back to globe</button>
+          </div>
         </div>
         <div class="globe-card">
-          <b>Working remotely, worldwide</b>
+          <b>Hybrid in NL · remote worldwide</b>
           <span><span class="dot"></span><span id="clock">Almere · CET</span></span>
           <span class="wx" id="wx" title="Live weather from Open-Meteo">Loading Almere weather…</span>
           <button class="dist-btn" id="distBtn" type="button">How far away are you? <b>↗</b></button>
@@ -2706,8 +3184,6 @@
               style="background:#f1e05a"></span>language-app<em>JavaScript</em></a>
           <a href="https://github.com/Shreya4119/RasikaStitchWork" target="_blank" rel="noopener"><span class="ld"
               style="background:#e34c26"></span>RasikaStitchWork<em>HTML</em></a>
-          <a href="https://github.com/Shreya4119/java_notes" target="_blank" rel="noopener"><span class="ld"
-              style="background:#9a9aa3"></span>java_notes<em>Open source</em></a>
         </div>
         <a class="gh-link" href="https://github.com/Shreya4119" target="_blank" rel="noopener">github.com/Shreya4119
           <span>↗</span></a>
@@ -2751,7 +3227,7 @@
         </div>
       </article>
 
-      <article class="tile t-learn">
+      <article class="tile t-learn" onclick="document.getElementById('cloud').scrollIntoView()" style="cursor:pointer">
         <div class="tile-head"><span class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
               stroke-width="1.6" stroke-linecap="round">
               <path
@@ -2763,7 +3239,7 @@
         <div class="learn-row">
           <div>
             <h4>AWS Certified<br>Developer</h4>
-            <p>Associate certification in progress — plus Dutch (A2).</p>
+            <p>Associate certification in progress — plus Dutch (A1).</p>
           </div>
           <div class="ring">
             <svg width="76" height="76" viewBox="0 0 76 76">
@@ -2849,7 +3325,7 @@
             payroll platforms used by thousands of people every day — event-driven pipelines on AWS SQS, secure APIs
             with Spring Security, JWT and OAuth2, and Redis caching that cut response times by about half.</p>
           <p>Today I work as a freelancer from the Netherlands, building e-commerce stores for small businesses and
-            AI-powered applications in Java. Open to remote freelance projects and remote roles. Full Dutch work
+            AI-powered applications in Java. Open to hybrid and remote roles, and freelance projects. Full Dutch work
             authorization — no sponsorship needed.</p>
           <a href="#experience" class="link-arrow">See my experience <span>↗</span></a>
         </div>
@@ -2892,6 +3368,13 @@
         </div>
       </div>
       <div class="projects" id="projGrid"></div>
+      <div class="proj-group" id="ecomGroup">
+        <div class="sub-head reveal">
+          <h3 class="sub-title">E-commerce websites <span class="grad">I designed &amp; built</span></h3>
+          <p>Live online stores, designed and developed for real clients who use them to sell every day.</p>
+        </div>
+        <div class="projects" id="ecomGrid"></div>
+      </div>
     </section>
 
     <!-- ================= SERVICES ================= -->
@@ -2927,8 +3410,42 @@
         </article>
         <article class="tile reveal"><span class="badge">LNG</span><small class="mono">Languages</small>
           <h3>English &amp; Dutch</h3>
-          <p>English: professional working proficiency · Dutch: A2, currently learning</p>
+          <p>English: professional working proficiency · Dutch: A1, currently learning</p>
         </article>
+      </div>
+    </section>
+
+    <!-- ================= CLOUD JOURNEY ================= -->
+    <section class="block wrap" id="cloud">
+      <span class="eyebrow reveal">07 — Cloud journey</span>
+      <div class="sec-head">
+        <h2 class="sec-title reveal">Learning in public,<br><span class="grad">on AWS.</span></h2>
+        <div class="sec-sub reveal">
+          <p>My AWS badges, the certifications I'm working towards, and the cloud projects I'm building along the way.</p>
+          <span class="visits" id="visits" hidden></span>
+        </div>
+      </div>
+      <div class="cloud-grid">
+        <div class="cloud-col">
+          <article class="tile cloud-card reveal">
+            <h3>Certification path <span class="mono" style="font-size:10px;color:var(--faint)">AWS</span></h3>
+            <ol class="cpath" id="cpath"></ol>
+          </article>
+          <article class="tile cloud-card reveal">
+            <h3>Verify my progress</h3>
+            <div class="cloud-links" id="cloudLinks"></div>
+          </article>
+        </div>
+        <div class="cloud-col">
+          <article class="tile cloud-card reveal">
+            <h3>Badges <span class="mono" style="font-size:10px;color:var(--faint)" id="badgeSrc"></span></h3>
+            <div id="badgeArea"></div>
+          </article>
+          <article class="tile cloud-card reveal">
+            <h3>Hands-on cloud lab log</h3>
+            <div class="labs" id="labs"></div>
+          </article>
+        </div>
       </div>
     </section>
 
@@ -2936,9 +3453,9 @@
     <section class="contact-sec" id="contact">
       <div class="wrap contact">
         <div class="reveal">
-          <span class="eyebrow">07 — Let's work together</span>
+          <span class="eyebrow">08 — Let's work together</span>
           <h2>Have an idea?<br><span class="grad">Let's build it.</span></h2>
-          <p class="lead">Open to remote work — freelance projects or remote roles, with clients and teams anywhere.
+          <p class="lead">Open to hybrid and remote work — roles or freelance projects, hybrid in the Netherlands or remote anywhere.
             Tell me what you're working on and I'll reply within two business days.</p>
           <a href="mailto:s.joshi41199@gmail.com" class="mail-big">s.joshi41199@gmail.com <svg viewBox="0 0 24 24"
               fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
@@ -3037,10 +3554,10 @@
     ];
     /* demo: live site URL ('' hides the button) · code: GitHub repo ('' hides the button) */
     const PROJECTS = [
-      { cat: 'e-commerce', label: 'E-commerce · Live client', t: 'Rasika Stitch Works', d: 'Online store for an embroidery and textiles business — product catalogue with category filters and search, cart and Razorpay checkout, Firebase sign-in with order history, WhatsApp ordering and an owner admin panel.', tags: ['JavaScript', 'Firebase', 'Razorpay', 'Responsive'], glow: '#ba4d00', demo: '', code: 'https://github.com/Shreya4119/RasikaStitchWork' },
-      { cat: 'e-commerce', label: 'E-commerce · Live client', t: 'Rutushree Collection', d: 'Designed and developed an online clothing store for a client, now live and used by the business to sell to its customers.', tags: ['E-commerce', 'Responsive', 'Live client'], glow: '#c2417a', demo: '', code: '' },
       { cat: 'ai', label: 'AI · Full-stack', t: 'Mentalist', d: 'Reads a company\'s annual report and explains its financial health in plain language: a 0–100 health score, every ratio with its formula, red flags, and chat answers traced back to the report.', tags: ['Java 21', 'Spring Boot', 'Angular', 'pgvector', 'AWS SQS', 'Redis', 'Gemini / Claude'], glow: '#7c6cff', demo: '', code: 'https://github.com/Shreya4119/mentalist' },
       { cat: 'web', label: 'Web app · Open source', t: 'Sprak', d: 'A mic-first A1 language-learning app for people who have just moved country — a teacher character guides learners through German and Dutch courses, with nothing leaving the device.', tags: ['JavaScript', 'Vite', 'Web Speech', 'Playwright'], glow: '#2b9bd8', demo: '', code: 'https://github.com/Shreya4119/language-app' },
+      { cat: 'e-commerce', label: 'E-commerce · Live client', t: 'Rasika Stitch Works', d: 'Online store for an embroidery and textiles business — product catalogue with category filters and search, cart and Razorpay checkout, Firebase sign-in with order history, WhatsApp ordering and an owner admin panel.', tags: ['JavaScript', 'Firebase', 'Razorpay', 'Responsive'], glow: '#ba4d00', demo: '', code: 'https://github.com/Shreya4119/RasikaStitchWork' },
+      { cat: 'e-commerce', label: 'E-commerce · Live client', t: 'Rutushree Collection', d: 'Designed and developed an online clothing store for a client, now live and used by the business to sell to its customers.', tags: ['E-commerce', 'Responsive', 'Live client'], glow: '#c2417a', demo: '', code: '' },
     ];
     const SERVICES = [
       ['Backend & API Development', 'Java and Spring Boot microservices, secure REST APIs and event-driven pipelines built to scale.'],
@@ -3079,12 +3596,12 @@
     /* Simple keyword-based answers for the "Ask my AI assistant" tile.
        Later: replace askAI() with a call to your own RAG/LLM backend. */
     const KB = [
-      { k: ['available', 'availability', 'hire', 'free', 'start', 'when', 'freelance'], a: 'Yes — I\'m open to remote work: freelance projects and remote roles. Send a few details through the contact form and I\'ll reply within two business days.' },
+      { k: ['available', 'availability', 'hire', 'free', 'start', 'when', 'freelance'], a: 'Yes — I\'m open to hybrid and remote work: full-time roles (hybrid in the Netherlands or remote) and freelance projects. Send a few details through the contact form and I\'ll reply within two business days.' },
       { k: ['ecommerce', 'e-commerce', 'shop', 'store', 'rasika', 'rutushree'], a: 'I designed and built two live e-commerce stores — Rasika Stitch Works and Rutushree Collection — with catalogue, cart, Razorpay checkout and an owner admin panel.' },
       { k: ['ai', 'rag', 'llm', 'agent', 'chatbot', 'mentalist', 'spring ai'], a: 'I build AI applications in Java. Mentalist reads company reports and explains their financial health, using Spring Boot, pgvector RAG, AWS SQS and Gemini or Claude.' },
       { k: ['stack', 'tech', 'skill', 'language', 'java', 'spring', 'angular', 'aws'], a: 'Java, Spring Boot, Spring Security, AWS (EC2, RDS, SQS, S3, EKS, Lambda), Redis, PostgreSQL, MySQL, Docker, and Angular with TypeScript and RxJS.' },
       { k: ['experience', 'neeyamo', 'years', 'background', 'work'], a: '4+ years at Neeyamo building Spring Boot microservices for enterprise HR and payroll platforms, then freelancing since April 2026.' },
-      { k: ['where', 'location', 'based', 'netherlands', 'visa', 'sponsor', 'dutch', 'remote'], a: 'I\'m based in Almere, Netherlands, with full Dutch work authorization — no sponsorship needed. I work remotely with clients anywhere.' },
+      { k: ['where', 'location', 'based', 'netherlands', 'visa', 'sponsor', 'dutch', 'remote'], a: 'I\'m based in Almere, Netherlands, with full Dutch work authorization — no sponsorship needed. I\'m open to hybrid work in the Netherlands and remote work with teams anywhere.' },
       { k: ['build', 'do', 'make', 'offer', 'service', 'help'], a: 'Backend APIs and microservices, e-commerce websites, AI and RAG features, AWS migrations and Angular frontends.' },
       { k: ['price', 'rate', 'cost', 'budget', 'charge'], a: 'It depends on scope. Tell me about your project in the contact form and I\'ll send a clear estimate.' },
     ];
@@ -3101,7 +3618,7 @@
   <article class="tile skill reveal"><div class="skill-top"><span class="badge">${s.k}</span><small>0${i + 1}</small></div>
   <h3>${s.t}</h3><div class="tags">${s.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div></article>`).join('');
 
-    $('#projGrid').innerHTML = PROJECTS.map((p, i) => `
+    const projCard = (p, i) => `
   <article class="tile proj reveal" data-cat="${p.cat}">
     <div class="proj-shot"><div class="glow" style="background:${p.glow}"></div><div class="bar"><i></i><i></i><i></i></div>
       <span class="num">0${i + 1}</span>
@@ -3111,7 +3628,11 @@
       <div class="proj-row"><small>${p.label}</small><div class="proj-links">${p.code ? `<a href="${p.code}" target="_blank" rel="noopener" aria-label="${p.t} source code">${ghIco}</a>` : ''}${p.demo ? `<a href="${p.demo}" target="_blank" rel="noopener" aria-label="${p.t} live site">${extIco}</a>` : ''}</div></div>
       <h3>${p.t}</h3><p>${p.d}</p><div class="tags">${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
     </div>
-  </article>`).join('');
+  </article>`;
+    const MAIN_PROJECTS = PROJECTS.filter(p => p.cat !== 'e-commerce');
+    const ECOM_PROJECTS = PROJECTS.filter(p => p.cat === 'e-commerce');
+    $('#projGrid').innerHTML = MAIN_PROJECTS.map(projCard).join('');
+    $('#ecomGrid').innerHTML = ECOM_PROJECTS.map((p, i) => projCard(p, i + MAIN_PROJECTS.length)).join('');
 
     $('#svcList').innerHTML = SERVICES.map((s, i) => `
   <a href="#contact" class="svc reveal"><small>0${i + 1}</small><h3>${s[0]}</h3><p>${s[1]}</p><span class="arr">${arrow}</span></a>`).join('');
@@ -3161,7 +3682,7 @@
     $$('.reveal').forEach((el, i) => { el.style.transitionDelay = (i % 3) * 80 + 'ms'; io.observe(el) });
 
     // active nav link
-    const secs = ['about', 'skills', 'projects', 'services', 'contact'].map(id => document.getElementById(id));
+    const secs = ['about', 'skills', 'projects', 'cloud', 'services', 'contact'].map(id => document.getElementById(id));
     const navIO = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { $$('.nav-links a').forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id)) } }), { rootMargin: '-45% 0px -50% 0px' });
     secs.forEach(s => navIO.observe(s));
 
@@ -3192,7 +3713,9 @@
     // project filter
     $$('#filters button').forEach(b => b.onclick = () => {
       $$('#filters button').forEach(x => x.classList.toggle('on', x === b)); const f = b.dataset.f;
-      $$('.proj').forEach(p => { const show = f === 'all' || p.dataset.cat === f; p.classList.toggle('hide', !show); if (show) { p.classList.add('in') } })
+      $$('.proj').forEach(p => { const show = f === 'all' || p.dataset.cat === f; p.classList.toggle('hide', !show); if (show) { p.classList.add('in') } });
+      $('#ecomGroup').classList.toggle('hide', !$$('#ecomGrid .proj:not(.hide)').length);
+      $('#ecomGroup .sub-head').classList.add('in');
     });
 
     // contact form validation
@@ -3284,7 +3807,8 @@
     (async () => {
       try {
         const repos = await getJSON('https://api.github.com/users/Shreya4119/repos?sort=pushed&per_page=10', 'gh', 30 * 60e3);
-        const list = repos.filter(r => !r.fork && !r.archived).slice(0, 4); if (!list.length) return;
+        const HIDDEN_REPOS = ['java_notes']; // repos not shown on the portfolio
+        const list = repos.filter(r => !r.fork && !r.archived && !HIDDEN_REPOS.includes(r.name)).slice(0, 4); if (!list.length) return;
         const esc = x => String(x).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
         $('#repos').innerHTML = list.map(r => `<a href="${esc(r.html_url)}" target="_blank" rel="noopener" title="${esc(r.description || '')}"><span class="ld" style="background:${LANG_COLORS[r.language] || '#9a9aa3'}"></span>${esc(r.name)}<em>${r.stargazers_count ? '★ ' + r.stargazers_count + ' · ' : ''}${ago(r.pushed_at)}</em></a>`).join('');
         $('#ghLive').hidden = false;
@@ -3314,6 +3838,118 @@
         if (diff) { const el = document.createElement('span'); el.textContent = `Your time is ${diff > 0 ? '+' : ''}${diff}h from mine`; $('#wx').after(el) }
       }
     } catch (e) { }
+
+    /* =========================================================
+       CLOUD JOURNEY — edit this block as you progress
+       - skillsProfile: your public AWS Skill Builder "Skills Profile" link
+         (Skill Builder → profile settings → turn on Skills Profile → copy the public link)
+       - credlyProfile: your public Credly profile, e.g. https://www.credly.com/users/your-name
+       - credlyBadgeIds: IDs of badges to embed live from Credly
+         (open a badge on Credly → Share → Embed → copy the data-share-badge-id value)
+       - visitorApi: later, the URL of your own AWS Lambda visitor counter (returns {"count": 123})
+       - status values: 'done' | 'progress' | 'planned'
+       ========================================================= */
+    const CLOUD = {
+      skillsProfile: '',
+      credlyProfile: '',
+      credlyBadgeIds: [],
+      visitorApi: '',
+      path: [
+        { t: 'AWS Educate badges', d: 'Introduction to Cloud 101 · Getting Started with Serverless · Getting Started with Storage', s: 'done' },
+        { t: 'AWS Certified Developer – Associate', d: 'Preparing for the exam: serverless, containers, CI/CD, security and Amazon Bedrock', s: 'progress' },
+        { t: 'AWS Certified Solutions Architect – Associate', d: 'Next: architecture, networking and cost design', s: 'planned' },
+      ],
+      // shown until Credly badge IDs are added above
+      badges: [
+        { code: '101', t: 'Introduction to Cloud 101', by: 'AWS EDUCATE' },
+        { code: 'λ', t: 'Getting Started with Serverless', by: 'AWS EDUCATE' },
+        { code: 'S3', t: 'Getting Started with Storage', by: 'AWS EDUCATE' },
+      ],
+      labs: [
+        { t: 'Production AWS at Neeyamo', d: 'Event-driven pipelines on SQS, Spring Boot moved to containers on EC2, multiple RDS clusters, CI/CD.', tags: ['SQS', 'EC2', 'RDS', 'Docker'], s: 'done' },
+        { t: 'Portfolio on S3 + CloudFront', d: 'This site as infrastructure as code with AWS CDK, HTTPS via ACM, deployed by GitHub Actions with OIDC.', tags: ['CDK', 'S3', 'CloudFront', 'ACM'], s: 'planned' },
+        { t: 'Serverless visitor counter', d: 'API Gateway + Lambda (Java) + DynamoDB, shown live on this page.', tags: ['Lambda', 'API Gateway', 'DynamoDB'], s: 'planned' },
+        { t: 'Mentalist on AWS', d: 'Spring Boot on ECS Fargate, RDS PostgreSQL with pgvector, SQS, ElastiCache and Amazon Bedrock.', tags: ['ECS Fargate', 'RDS', 'Bedrock', 'SQS'], s: 'planned' },
+      ],
+    };
+
+    (function renderCloud() {
+      const esc = x => String(x).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+      const label = { done: 'Done', progress: 'In progress', planned: 'Planned' };
+      $('#cpath').innerHTML = CLOUD.path.map(p => `<li class="${p.s}"><span class="pt"></span><b>${esc(p.t)}</b><p>${esc(p.d)}</p><span class="st ${p.s}">${label[p.s]}</span></li>`).join('');
+      $('#labs').innerHTML = CLOUD.labs.map(l => `<div class="lab"><b>${esc(l.t)}</b><span class="st ${l.s}">${label[l.s]}</span><p>${esc(l.d)}</p><div class="tags">${l.tags.map(t => `<span class="tag">${esc(t)}</span>`).join('')}</div></div>`).join('');
+
+      const links = [];
+      if (CLOUD.skillsProfile) links.push(`<a class="btn btn-primary" href="${esc(CLOUD.skillsProfile)}" target="_blank" rel="noopener">AWS Skills Profile ${arrow}</a>`);
+      if (CLOUD.credlyProfile) links.push(`<a class="btn btn-ghost" href="${esc(CLOUD.credlyProfile)}" target="_blank" rel="noopener">All badges on Credly ${arrow}</a>`);
+      links.push(`<a class="btn btn-ghost" href="https://github.com/Shreya4119" target="_blank" rel="noopener">Code on GitHub ${arrow}</a>`);
+      $('#cloudLinks').innerHTML = links.join('');
+
+      if (CLOUD.credlyBadgeIds.length) {
+        // live, verifiable badges from Credly's official embed
+        $('#badgeSrc').textContent = 'VERIFIED BY CREDLY';
+        $('#badgeArea').innerHTML = `<div class="credly-embed">${CLOUD.credlyBadgeIds.map(id => `<div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="${esc(id)}" data-share-badge-host="https://www.credly.com"></div>`).join('')}</div>`;
+        const sc = document.createElement('script'); sc.src = 'https://cdn.credly.com/assets/utilities/embed.js'; sc.async = true; document.body.appendChild(sc);
+      } else {
+        const tag = CLOUD.credlyProfile ? 'a' : 'div';
+        const href = CLOUD.credlyProfile ? ` href="${esc(CLOUD.credlyProfile)}" target="_blank" rel="noopener"` : '';
+        $('#badgeArea').innerHTML = `<div class="badges">${CLOUD.badges.map(b => `<${tag} class="bdg"${href}><span class="hex">${esc(b.code)}</span><span>${esc(b.t)}</span><small>${esc(b.by)}</small></${tag}>`).join('')}</div>`;
+      }
+
+      if (CLOUD.visitorApi) {
+        fetch(CLOUD.visitorApi, { method: 'POST' }).then(r => r.json()).then(d => {
+          if (typeof d.count !== 'number') return;
+          const v = $('#visits'); v.innerHTML = `<span class="dot"></span><b>${d.count.toLocaleString()}</b> visits · counted by AWS Lambda + DynamoDB`; v.hidden = false;
+        }).catch(() => { });
+      }
+    })();
+
+    /* =========================================================
+       INTERACTIVE GLOBE — tap a marker to zoom to country level
+       Country outlines: Natural Earth (public domain), simplified.
+       ========================================================= */
+    const COUNTRIES = {
+      nl: { name: 'Netherlands', city: 'Almere', sub: 'Home base · hybrid in NL, remote worldwide', path: 'M177.4 204.0L168.0 203.4L166.0 202.5L163.9 198.2L164.2 196.8L168.2 191.6L168.1 189.2L170.8 183.2L171.1 180.8L169.9 179.1L162.8 176.3L157.7 170.9L151.4 172.5L147.7 171.3L143.4 167.1L141.8 160.5L140.8 159.5L137.4 163.3L133.8 163.6L132.7 163.0L132.4 160.5L130.3 158.1L125.6 162.4L123.9 162.4L120.6 159.2L118.3 160.1L116.1 162.1L116.9 165.8L115.7 166.5L113.1 166.2L101.7 161.1L94.7 163.2L89.8 160.7L85.7 160.4L80.5 155.1L82.4 152.8L84.3 152.1L91.7 151.6L97.1 153.0L106.9 160.3L111.9 159.3L110.6 157.4L104.5 154.4L101.6 151.7L108.4 150.8L106.6 146.9L99.4 138.4L104.7 127.0L109.4 123.0L115.8 114.5L119.9 107.5L122.9 99.2L127.3 76.5L130.8 68.4L135.3 70.4L141.9 67.2L153.2 58.8L156.6 51.5L159.8 48.1L172.9 41.5L180.0 39.5L208.8 37.4L214.6 44.5L218.0 46.1L223.3 47.2L223.0 64.8L217.7 80.5L217.0 86.3L216.3 87.4L206.2 87.4L204.8 88.4L205.1 91.1L204.0 93.8L204.5 95.7L206.2 97.9L209.4 99.3L214.6 99.1L217.1 103.1L216.5 110.2L214.9 113.9L205.3 121.7L204.9 124.4L208.3 127.9L208.2 128.7L205.9 132.2L197.4 135.7L193.9 135.4L191.2 137.5L184.0 134.0L178.0 136.9L175.7 138.9L175.7 141.3L181.1 149.1L181.1 151.5L185.0 158.3L185.3 160.7L184.0 166.6L180.6 174.7L180.8 177.4L182.9 178.3L182.6 179.4L175.4 186.0L172.7 185.7L172.2 186.7L173.7 189.5L177.9 191.6L179.5 194.4L177.4 204.0ZM110.1 164.6L108.0 169.5L103.0 173.3L97.7 175.7L95.0 175.4L92.2 172.8L89.3 171.5L85.5 170.8L81.3 173.6L78.7 172.2L76.7 165.2L79.6 164.2L85.8 163.8L90.7 165.7L97.0 166.6L101.9 164.0L105.7 166.2L110.1 164.6ZM190.4 33.1L185.0 35.2L183.7 34.8L184.1 34.2L188.8 32.8L190.4 33.1ZM175.0 36.3L167.5 37.3L164.5 35.8L166.6 35.4L173.0 35.3L175.0 36.3ZM143.7 45.7L136.7 50.2L136.1 49.5L140.6 45.5L143.7 45.7ZM152.0 40.8L148.4 41.3L146.8 40.5L155.4 38.0L161.8 37.6L152.0 40.8ZM135.2 60.3L131.5 64.7L128.5 62.5L129.7 59.1L135.2 53.4L135.2 60.3ZM99.5 142.8L103.2 146.1L104.3 148.4L99.6 149.7L94.6 145.6L91.2 146.6L90.0 143.4L93.4 142.3L99.5 142.8ZM205.7 28.7L202.1 28.9L203.2 27.2L206.4 26.0L208.2 26.0L205.7 28.7Z', x: 149.7, y: 104.9 },
+      in: { name: 'India', city: 'Pune', sub: 'Studied & worked here, 2018 – 2025', path: 'M67.1 98.1L70.3 97.4L70.6 95.2L76.4 96.2L80.3 94.6L81.6 95.7L83.4 94.7L81.2 86.9L79.0 86.6L78.1 85.4L78.4 81.7L74.7 80.2L74.9 77.8L79.8 72.3L82.0 74.2L88.1 72.6L90.8 67.8L94.0 66.0L96.7 60.4L99.2 59.5L99.7 57.3L103.8 53.6L103.4 48.8L107.8 46.3L104.1 44.6L104.0 43.0L102.3 42.9L100.3 40.3L101.1 38.3L100.1 37.0L101.7 35.6L99.7 34.8L99.1 32.9L100.0 31.2L102.0 30.5L110.0 32.1L115.0 30.7L121.8 26.0L123.2 26.1L124.8 31.5L128.5 33.4L127.1 35.2L127.5 38.4L129.4 40.4L129.9 44.5L128.2 45.4L127.0 43.9L125.2 44.4L127.2 47.9L127.2 51.8L129.3 51.3L131.5 53.9L139.9 58.6L136.6 61.7L134.6 67.0L144.9 73.2L153.0 76.3L157.6 75.6L160.5 76.8L161.0 78.4L163.9 80.1L166.4 79.7L167.3 81.1L179.8 82.4L180.7 80.3L179.7 77.8L180.6 72.7L184.4 72.4L184.9 76.6L184.0 77.5L186.3 79.7L189.8 80.5L193.1 79.3L202.5 79.5L203.0 76.8L200.2 75.2L200.5 73.9L205.7 73.2L209.7 68.5L212.6 67.9L217.5 64.3L221.8 66.0L225.5 63.5L227.3 64.7L226.1 66.7L227.8 65.9L228.6 67.7L226.9 69.9L231.4 70.1L232.9 72.5L230.3 75.0L231.5 77.9L229.1 76.5L224.4 78.5L219.9 81.9L220.3 84.5L217.2 89.0L217.9 90.7L214.6 97.9L210.1 96.8L210.3 102.6L209.2 103.2L209.1 108.1L207.7 109.6L206.6 108.7L205.8 109.7L203.9 99.1L202.1 99.1L200.4 103.5L199.3 102.1L198.7 102.7L197.8 99.8L198.9 96.6L201.8 96.0L203.8 91.7L205.2 91.3L202.8 89.9L190.2 89.2L189.3 83.5L187.6 84.8L185.6 82.3L184.5 83.2L181.9 81.3L182.3 82.5L180.3 85.5L185.2 89.4L182.4 89.8L179.9 93.3L183.9 95.5L183.0 99.2L183.9 101.8L185.1 102.2L185.8 111.7L184.7 111.1L184.0 112.1L183.5 108.8L183.1 111.7L181.4 111.1L180.5 111.8L180.9 108.7L179.5 107.2L180.7 108.8L179.5 110.6L174.7 112.7L173.3 114.3L174.0 117.6L172.7 120.0L169.7 122.6L164.2 123.4L163.8 124.5L165.3 124.3L161.5 127.4L157.7 132.5L147.8 139.9L147.2 143.3L144.4 144.7L141.7 144.6L139.9 148.2L138.0 147.4L136.0 148.5L134.7 152.5L136.1 162.3L135.2 160.9L134.7 161.5L136.3 163.1L132.6 175.7L133.5 176.5L133.4 181.9L130.5 182.3L128.3 186.6L128.8 188.0L131.0 188.9L128.5 188.4L125.4 189.4L123.3 193.9L120.2 195.8L114.8 190.7L113.6 184.4L110.0 175.4L105.6 168.0L102.4 156.0L96.5 143.9L93.9 130.4L94.6 128.0L94.4 127.2L93.4 127.7L93.5 126.3L94.5 126.4L93.4 125.9L92.7 123.0L94.0 117.8L92.4 112.9L95.2 111.1L92.0 111.4L92.9 109.7L91.8 109.7L92.0 108.6L93.5 108.1L89.9 107.9L90.4 109.0L89.1 110.7L90.3 112.5L89.0 114.8L83.3 117.4L80.3 116.7L71.7 107.8L72.1 106.9L73.4 107.8L78.5 106.0L80.3 102.8L75.6 104.9L73.2 104.3L69.8 102.2L68.5 99.8L70.6 98.1L67.5 99.7L67.1 98.1ZM206.7 174.4L205.6 172.3L207.0 170.1L207.8 162.3L208.6 161.9L208.6 163.7L206.7 174.4Z', x: 99.4, y: 131.1 },
+    };
+    (function initGlobe() {
+      const globe = $('#globe'), svg = globe.querySelector('.globe-svg');
+      let lastMarker = null;
+      function zoomTo(key, marker) {
+        const c = COUNTRIES[key]; if (!c) return;
+        lastMarker = marker;
+        const core = marker.querySelector('.core');
+        svg.style.transformOrigin = `${core.getAttribute('cx') / 3}% ${core.getAttribute('cy') / 3}%`;
+        $('#cShape').setAttribute('d', c.path);
+        ['cPin', 'cPulse'].forEach(id => { $('#' + id).setAttribute('cx', c.x); $('#' + id).setAttribute('cy', c.y) });
+        const label = $('#cCity'); label.textContent = c.city;
+        const right = c.x < 190; label.setAttribute('x', right ? c.x + 10 : c.x - 10); label.setAttribute('y', c.y + 4);
+        label.setAttribute('text-anchor', right ? 'start' : 'end');
+        $('#cName').textContent = `${c.city}, ${c.name}`; $('#cSub').textContent = c.sub;
+        globe.classList.remove('zoomed'); void globe.offsetWidth; // restart the outline drawing
+        globe.classList.add('zoomed');
+        setTimeout(() => $('#cBack').focus({ preventScroll: true }), 500);
+      }
+      function back() {
+        globe.classList.remove('zoomed');
+        if (lastMarker) setTimeout(() => lastMarker.focus({ preventScroll: true }), 300);
+      }
+      globe.querySelectorAll('.mk').forEach(m => {
+        m.addEventListener('click', e => { e.stopPropagation(); zoomTo(m.dataset.country, m) });
+        m.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); zoomTo(m.dataset.country, m) } });
+      });
+      $('#cBack').addEventListener('click', e => { e.stopPropagation(); back() });
+      document.addEventListener('keydown', e => { if (e.key === 'Escape' && globe.classList.contains('zoomed')) back() });
+      // subtle 3D tilt following the pointer
+      const tile = globe.closest('.tile');
+      tile.addEventListener('pointermove', e => {
+        if (globe.classList.contains('zoomed') || e.pointerType === 'touch') return;
+        const r = globe.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width - .5, py = (e.clientY - r.top) / r.height - .5;
+        svg.style.setProperty('--ty', (px * 14).toFixed(1) + 'deg'); svg.style.setProperty('--tx', (-py * 14).toFixed(1) + 'deg');
+      });
+      tile.addEventListener('pointerleave', () => { svg.style.setProperty('--tx', '0deg'); svg.style.setProperty('--ty', '0deg') });
+    })();
 
     // toast
     let tt; function toast(m) { const t = $('#toast'); t.textContent = m; t.classList.add('show'); clearTimeout(tt); tt = setTimeout(() => t.classList.remove('show'), 1800) }
