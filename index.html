@@ -1819,6 +1819,11 @@
       display: none
     }
 
+    .proj-live {
+      margin-top: 16px;
+      font-size: 13.5px
+    }
+
     .proj-group {
       margin-top: 64px
     }
@@ -3556,7 +3561,7 @@
     const PROJECTS = [
       { cat: 'ai', label: 'AI · Full-stack', t: 'Mentalist', d: 'Reads a company\'s annual report and explains its financial health in plain language: a 0–100 health score, every ratio with its formula, red flags, and chat answers traced back to the report.', tags: ['Java 21', 'Spring Boot', 'Angular', 'pgvector', 'AWS SQS', 'Redis', 'Gemini / Claude'], glow: '#7c6cff', demo: '', code: 'https://github.com/Shreya4119/mentalist' },
       { cat: 'web', label: 'Web app · Open source', t: 'Sprak', d: 'A mic-first A1 language-learning app for people who have just moved country — a teacher character guides learners through German and Dutch courses, with nothing leaving the device.', tags: ['JavaScript', 'Vite', 'Web Speech', 'Playwright'], glow: '#2b9bd8', demo: '', code: 'https://github.com/Shreya4119/language-app' },
-      { cat: 'e-commerce', label: 'E-commerce · Live client', t: 'Rasika Stitch Works', d: 'Online store for an embroidery and textiles business — product catalogue with category filters and search, cart and Razorpay checkout, Firebase sign-in with order history, WhatsApp ordering and an owner admin panel.', tags: ['JavaScript', 'Firebase', 'Razorpay', 'Responsive'], glow: '#ba4d00', demo: '', code: 'https://github.com/Shreya4119/RasikaStitchWork' },
+      { cat: 'e-commerce', label: 'E-commerce · Live client', t: 'Rasika Stitch Works', d: 'Online store for an embroidery and textiles business — product catalogue with category filters and search, cart and Razorpay checkout, Firebase sign-in with order history, WhatsApp ordering and an owner admin panel.', tags: ['JavaScript', 'Firebase', 'Razorpay', 'Responsive'], glow: '#ba4d00', demo: 'https://shreya4119.github.io/RasikaStitchWork/', code: 'https://github.com/Shreya4119/RasikaStitchWork' },
       { cat: 'e-commerce', label: 'E-commerce · Live client', t: 'Rutushree Collection', d: 'Designed and developed an online clothing store for a client, now live and used by the business to sell to its customers.', tags: ['E-commerce', 'Responsive', 'Live client'], glow: '#c2417a', demo: '', code: '' },
     ];
     const SERVICES = [
@@ -3626,7 +3631,7 @@
     </div>
     <div class="proj-body">
       <div class="proj-row"><small>${p.label}</small><div class="proj-links">${p.code ? `<a href="${p.code}" target="_blank" rel="noopener" aria-label="${p.t} source code">${ghIco}</a>` : ''}${p.demo ? `<a href="${p.demo}" target="_blank" rel="noopener" aria-label="${p.t} live site">${extIco}</a>` : ''}</div></div>
-      <h3>${p.t}</h3><p>${p.d}</p><div class="tags">${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+      <h3>${p.t}</h3><p>${p.d}</p><div class="tags">${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>${p.demo ? `<a class="link-arrow proj-live" href="${p.demo}" target="_blank" rel="noopener">Visit live site <span>↗</span></a>` : ''}
     </div>
   </article>`;
     const MAIN_PROJECTS = PROJECTS.filter(p => p.cat !== 'e-commerce');
