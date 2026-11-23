@@ -1636,7 +1636,7 @@
 
     /* ============ SECTIONS ============ */
     section.block {
-      padding: 130px 0 0
+      padding-top: 130px
     }
 
     .sec-head {
@@ -1920,6 +1920,26 @@
       display: grid;
       grid-template-columns: 28% 1fr;
       transition: transform .5s var(--ease)
+    }
+
+    .proj-shot .shot {
+      position: absolute;
+      inset: 31px 0 0;
+      display: block;
+      overflow: hidden
+    }
+
+    .proj-shot .shot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top left;
+      display: block;
+      transition: transform .6s var(--ease)
+    }
+
+    .proj:hover .shot img {
+      transform: scale(1.03)
     }
 
     .proj:hover .mock {
@@ -3561,7 +3581,7 @@
     const PROJECTS = [
       { cat: 'ai', label: 'AI · Full-stack', t: 'Mentalist', d: 'Reads a company\'s annual report and explains its financial health in plain language: a 0–100 health score, every ratio with its formula, red flags, and chat answers traced back to the report.', tags: ['Java 21', 'Spring Boot', 'Angular', 'pgvector', 'AWS SQS', 'Redis', 'Gemini / Claude'], glow: '#7c6cff', demo: '', code: 'https://github.com/Shreya4119/mentalist' },
       { cat: 'web', label: 'Web app · Open source', t: 'Sprak', d: 'A mic-first A1 language-learning app for people who have just moved country — a teacher character guides learners through German and Dutch courses, with nothing leaving the device.', tags: ['JavaScript', 'Vite', 'Web Speech', 'Playwright'], glow: '#2b9bd8', demo: '', code: 'https://github.com/Shreya4119/language-app' },
-      { cat: 'e-commerce', label: 'E-commerce · Live client', t: 'Rasika Stitch Works', d: 'Online store for an embroidery and textiles business — product catalogue with category filters and search, cart and Razorpay checkout, Firebase sign-in with order history, WhatsApp ordering and an owner admin panel.', tags: ['JavaScript', 'Firebase', 'Razorpay', 'Responsive'], glow: '#ba4d00', demo: 'https://shreya4119.github.io/RasikaStitchWork/', code: 'https://github.com/Shreya4119/RasikaStitchWork' },
+      { cat: 'e-commerce', label: 'E-commerce · Live client', t: 'Rasika Stitch Works', d: 'Online store for an embroidery and textiles business — product catalogue with category filters and search, cart and Razorpay checkout, Firebase sign-in with order history, WhatsApp ordering and an owner admin panel.', tags: ['JavaScript', 'Firebase', 'Razorpay', 'Responsive'], glow: '#ba4d00', img: 'images/rasika-stitch-works.jpg', demo: 'https://shreya4119.github.io/RasikaStitchWork/', code: 'https://github.com/Shreya4119/RasikaStitchWork' },
       { cat: 'e-commerce', label: 'E-commerce · Live client', t: 'Rutushree Collection', d: 'Designed and developed an online clothing store for a client, now live and used by the business to sell to its customers.', tags: ['E-commerce', 'Responsive', 'Live client'], glow: '#c2417a', demo: '', code: '' },
     ];
     const SERVICES = [
@@ -3626,8 +3646,8 @@
     const projCard = (p, i) => `
   <article class="tile proj reveal" data-cat="${p.cat}">
     <div class="proj-shot"><div class="glow" style="background:${p.glow}"></div><div class="bar"><i></i><i></i><i></i></div>
-      <span class="num">0${i + 1}</span>
-      <div class="mock"><div class="side"></div><div class="main"><div class="sq" style="background:${p.glow}"></div><div class="ln"></div><div class="cells"><i></i><i></i><i></i></div></div></div>
+      ${p.img ? `<a class="shot" href="${p.demo || p.code}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="${p.img}" alt="" loading="lazy" width="1200" height="738"></a>` : `<span class="num">0${i + 1}</span>
+      <div class="mock"><div class="side"></div><div class="main"><div class="sq" style="background:${p.glow}"></div><div class="ln"></div><div class="cells"><i></i><i></i><i></i></div></div></div>`}
     </div>
     <div class="proj-body">
       <div class="proj-row"><small>${p.label}</small><div class="proj-links">${p.code ? `<a href="${p.code}" target="_blank" rel="noopener" aria-label="${p.t} source code">${ghIco}</a>` : ''}${p.demo ? `<a href="${p.demo}" target="_blank" rel="noopener" aria-label="${p.t} live site">${extIco}</a>` : ''}</div></div>
